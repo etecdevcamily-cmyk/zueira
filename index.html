@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entre!</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #080305;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .instrucao {
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      color: #f87171;
+      letter-spacing: 1px;
+      transition: opacity 0.4s;
+    }
+
+    /* Container do envelope */
+    .envelope-wrapper {
+      position: relative;
+      width: 320px;
+      height: 220px;
+      cursor: pointer;
+    }
+
+    .envelope {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #2b0c15;
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 15px 35px rgba(225, 29, 72, 0.3);
+    }
+
+    /* Aba superior do envelope */
+    .aba {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 160px solid transparent;
+      border-right: 160px solid transparent;
+      border-top: 120px solid #5c1222;
+      transform-origin: top;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 4;
+    }
+
+    /* Bolsos frontal e laterais */
+    .bolso-esquerdo {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 160px solid #380d19;
+      border-top: 110px solid transparent;
+      border-bottom: 110px solid #380d19;
+      border-radius: 0 0 0 14px;
+      z-index: 3;
+    }
+
+    .bolso-direito {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-right: 160px solid #420f1e;
+      border-top: 110px solid transparent;
+      border-bottom: 110px solid #420f1e;
+      border-radius: 0 0 14px 0;
+      z-index: 3;
+    }
+
+    .bolso-inferior {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 160px solid transparent;
+      border-right: 160px solid transparent;
+      border-bottom: 120px solid #290812;
+      border-radius: 0 0 14px 14px;
+      z-index: 3;
+    }
+
+    /* Folha / Carta dentro */
+    .carta {
+      position: absolute;
+      left: 15px;
+      bottom: 10px;
+      width: 290px;
+      min-height: 200px;
+      background: #170d10;
+      border: 2px solid #e11d48;
+      border-radius: 14px;
+      padding: 18px 16px;
+      text-align: center;
+      box-shadow: 0 -5px 20px rgba(225, 29, 72, 0.35);
+      z-index: 2;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), z-index 0s 0.3s;
+    }
+
+    .carta h2 {
+      font-size: 1.15rem;
+      color: #ffe4e6;
+      margin-bottom: 8px;
+    }
+
+    .carta p {
+      font-size: 0.9rem;
+      color: #f1f5f9;
+      line-height: 1.35;
+      margin-bottom: 16px;
+    }
+
+    .botoes {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      min-height: 44px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 22px;
+      color: #fff;
+      background: #dc2626;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    button:hover {
+      background: #ef4444;
+      transform: scale(1.05);
+    }
+
+    #nao {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Estado aberto ao clicar */
+    .envelope-wrapper.aberto .aba {
+      transform: rotateX(180deg);
+      z-index: 1;
+    }
+
+    .envelope-wrapper.aberto .carta {
+      transform: translateY(-160px);
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="instrucao" id="texto-instrucao">Toque no envelope para abrir 💌</p>
+
+  <div class="envelope-wrapper" id="envelopeWrapper" onclick="abrirEnvelope()">
+    <div class="aba"></div>
+    <div class="envelope">
+      <div class="carta" id="carta">
+        <h2>Para você:</h2>
+        <p>Gostaria de abrir?</p>
+        <div class="botoes" onclick="event.stopPropagation()">
+          <button onclick="aceitou()">Abra.</button>
+          <button id="nao">Não abra.</button>
+        </div>
+      </div>
+      <div class="bolso-esquerdo"></div>
+      <div class="bolso-direito"></div>
+      <div class="bolso-inferior"></div>
+    </div>
+  </div>
+
+  <script>
+    const wrapper = document.getElementById('envelopeWrapper');
+    const instrucao = document.getElementById('texto-instrucao');
+    const botaoNao = document.getElementById('nao');
+
+    function abrirEnvelope() {
+      if (!wrapper.classList.contains('aberto')) {
+        wrapper.classList.add('aberto');
+        instrucao.style.opacity = '0';
+      }
+    }
+
+    function fugir() {
+      botaoNao.style.position = 'fixed';
+      const w = botaoNao.offsetWidth;
+      const h = botaoNao.offsetHeight;
+
+      const maxX = window.innerWidth - w - 24;
+      const maxY = window.innerHeight - h - 24;
+
+      const novoX = Math.max(24, Math.floor(Math.random() * maxX));
+      const novoY = Math.max(24, Math.floor(Math.random() * maxY));
+
+      botaoNao.style.left = novoX + 'px';
+      botaoNao.style.top = novoY + 'px';
+    }
+
+    botaoNao.addEventListener('mouseenter', fugir);
+    botaoNao.addEventListener('touchstart', function (e) {
+      e.preventDefault();
+      fugir();
+    });
+
+    function aceitou() {
+      window.location.href = 'coracao.html';
+    }
+  </script>
+</body>
+</html>
